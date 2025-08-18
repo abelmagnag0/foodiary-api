@@ -1,5 +1,5 @@
 // Dependencies
-import { getSchema } from '../../kernel/decorators/Schema';
+import { getSchema } from "@kernel/decorators/Schema";
 
 export abstract class Controller<TBody = undefined> {
   protected abstract handle(
@@ -7,7 +7,7 @@ export abstract class Controller<TBody = undefined> {
   ): Promise<Controller.Response<TBody>>;
 
   public execute(
-    request: Controller.Request,
+    request: Controller.Request
   ): Promise<Controller.Response<TBody>> {
     const body = this.validateBody(request.body);
 
@@ -17,16 +17,14 @@ export abstract class Controller<TBody = undefined> {
     });
   }
 
-  private validateBody(body: Controller.Request['body']) {
+  private validateBody(body: Controller.Request["body"]) {
     const schema = getSchema(this);
 
     if (!schema) {
       return body;
     }
 
-    // to-do: era pra ser
-    // return schema.parse(body);
-    return schema.safeParse(body);
+    return schema.parse(body);
   }
 }
 

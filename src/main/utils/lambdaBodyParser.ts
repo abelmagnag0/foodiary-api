@@ -1,6 +1,9 @@
 // Dependencies
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 
+// Errors
+import { BadRequest } from '@application/errors/http/BadRequest';
+
 export function lambdaBodyParser(body: APIGatewayProxyEventV2['body']) {
   try {
     if (!body) {
@@ -9,6 +12,6 @@ export function lambdaBodyParser(body: APIGatewayProxyEventV2['body']) {
 
     return JSON.parse(body);
   } catch {
-    throw new Error('Malformed body.');
+    throw new BadRequest('Malformed body.');
   }
 }

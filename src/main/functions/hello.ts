@@ -1,11 +1,9 @@
 import 'reflect-metadata';
 
-// Controllers
-import { HelloController } from '../../application/controllers/HelloController';
+import { HelloController } from '@application/controllers/HelloController';
+import { Registry } from '@kernel/di/Registry';
+import { lambdaHttpAdapter } from '@main/adapters/lambdaHttpAdapter';
 
-// Adapters
-import { lambdaHttpAdapter } from '../adapters/lambdaHttpAdapter';
-
-const controller = new HelloController();
+const controller = Registry.getInstance().resolve(HelloController);
 
 export const handler = lambdaHttpAdapter(controller);
