@@ -1,0 +1,48 @@
+// Decorators
+import { Injectable } from '@kernel/decorators/Injectable';
+import { Schema } from '@kernel/decorators/Schema';
+
+// Contracts
+import { Controller } from '@application/contracts/Controller';
+
+// Schemas
+import { SignUpBody, signUpSchema } from './schemas/signUpSchema';
+
+// UseCases
+import { SignUpUseCase } from '@application/usecases/auth/SignUpUseCase';
+
+@Injectable()
+@Schema(signUpSchema)
+export class SignUpController extends Controller<SignUpController.Response> {
+  constructor(private readonly signUpUseCase: SignUpUseCase) {
+    super();
+  }
+
+  protected override async handle({
+    body,
+  }: Controller.Request<SignUpBody>): Promise<
+    Controller.Response<SignUpController.Response>
+  > {
+    const { account } = body;
+
+    const {
+      accessToken,
+      refreshToken,
+    } = await this.signUpUseCase.execute(account);
+
+    return {
+      statusCode: 200,
+      body: {
+        accessToken,
+        refreshToken,
+      },
+    };
+  }
+}
+
+export namespace SignUpController {
+  export type Response = {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
