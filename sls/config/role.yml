@@ -1,6 +1,8 @@
 statements:
-  - Effect: "Allow"
+  - Effect: Allow
     Action:
-      - "dynamodb:PutItem"
+      - dynamodb:PutItem
+      - dynamodb:Query
     Resource:
       - !GetAtt MainTable.Arn
+      - !Sub '${MainTable.Arn}/index/*'

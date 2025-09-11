@@ -8,8 +8,8 @@ export class AccountItem {
     this.keys = {
       PK: AccountItem.getPK(this.attrs.id),
       SK: AccountItem.getSK(this.attrs.id),
-      GS1PK: AccountItem.getGSI1PK(this.attrs.email),
-      GS1SK: AccountItem.getGSI1SK(this.attrs.email),
+  GSI1PK: AccountItem.getGSI1PK(this.attrs.email),
+  GSI1SK: AccountItem.getGSI1SK(this.attrs.email),
     };
   }
 
@@ -28,6 +28,15 @@ export class AccountItem {
     });
   }
 
+  static toEntity(accountItem: AccountItem.ItemType): Account {
+    return new Account({
+      id: accountItem.id,
+      email: accountItem.email,
+      externalId: accountItem.externalId,
+      createdAt: new Date(accountItem.createdAt),
+    });
+  }
+
   static getPK(accountId: string): AccountItem.Keys['PK'] {
     return `ACCOUNT#${accountId}`;
   }
@@ -36,11 +45,11 @@ export class AccountItem {
     return `ACCOUNT#${accountId}`;
   }
 
-  static getGSI1PK(email: string): AccountItem.Keys['GS1PK'] {
+  static getGSI1PK(email: string): AccountItem.Keys['GSI1PK'] {
     return `ACCOUNT#${email}`;
   }
 
-  static getGSI1SK(email: string): AccountItem.Keys['GS1SK'] {
+  static getGSI1SK(email: string): AccountItem.Keys['GSI1SK'] {
     return `ACCOUNT#${email}`;
   }
 }
@@ -49,8 +58,8 @@ export namespace AccountItem {
   export type Keys = {
     PK: `ACCOUNT#${string}`;
     SK: `ACCOUNT#${string}`;
-    GS1PK: `ACCOUNT#${string}`;
-    GS1SK: `ACCOUNT#${string}`;
+    GSI1PK: `ACCOUNT#${string}`;
+    GSI1SK: `ACCOUNT#${string}`;
   };
 
   export type Attributes = {
