@@ -31,7 +31,7 @@ export class SignUpController extends Controller<SignUpController.Response> {
     } = await this.signUpUseCase.execute(account);
 
     return {
-      statusCode: 200,
+      statusCode: 201,
       body: {
         accessToken,
         refreshToken,

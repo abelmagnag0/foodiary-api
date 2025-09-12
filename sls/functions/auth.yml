@@ -2,8 +2,8 @@ signUp:
   handler: src/main/functions/auth/signUp.handler
   events:
     - httpApi:
-        path: /auth/sign-up
         method: POST
+        path: /auth/sign-up
 
 preSignUpTrigger:
   handler: src/main/functions/auth/preSignUpTrigger.handler
@@ -13,3 +13,16 @@ preSignUpTrigger:
         trigger: PreSignUp
         existing: true
         forceDeploy: true
+
+signIn:
+  handler: src/main/functions/auth/signIn.handler
+  events:
+    - httpApi:
+        method: POST
+        path: /auth/sign-in
+
+# The trigger is configured manually to support event V2
+# Go to UserPool.yml to see the configuration
+# Do not change this function name without change in UserPool.yml
+preTokenGenerationTrigger:
+  handler: src/main/functions/auth/preTokenGenerationTrigger.handler
