@@ -21,6 +21,13 @@ signIn:
         method: POST
         path: /auth/sign-in
 
+refreshToken:
+  handler: src/main/functions/auth/refreshToken.handler
+  events:
+    - httpApi:
+        method: POST
+        path: /auth/refresh-token
+
 # The trigger is configured manually to support event V2
 # Go to UserPool.yml to see the configuration
 # Do not change this function name without change in UserPool.yml

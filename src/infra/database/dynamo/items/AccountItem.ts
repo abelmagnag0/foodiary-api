@@ -8,8 +8,8 @@ export class AccountItem {
     this.keys = {
       PK: AccountItem.getPK(this.attrs.id),
       SK: AccountItem.getSK(this.attrs.id),
-  GSI1PK: AccountItem.getGSI1PK(this.attrs.email),
-  GSI1SK: AccountItem.getGSI1SK(this.attrs.email),
+      GSI1PK: AccountItem.getGSI1PK(this.attrs.email),
+      GSI1SK: AccountItem.getGSI1SK(this.attrs.email),
     };
   }
 
@@ -65,7 +65,7 @@ export namespace AccountItem {
   export type Attributes = {
     id: string;
     email: string;
-    externalId: string;
+    externalId: string | undefined;
     createdAt: string;
   };
 

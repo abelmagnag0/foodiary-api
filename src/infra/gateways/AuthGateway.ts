@@ -1,4 +1,5 @@
 import {
+  GetTokensFromRefreshTokenCommand,
   InitiateAuthCommand,
   SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
@@ -43,11 +44,13 @@ export class AuthGateway {
   async signUp({
     email,
     password,
+    internalId,
   }: AuthGateway.SignUpParams): Promise<AuthGateway.SignUpResult> {
     const command = new SignUpCommand({
       ClientId: this.appConfig.auth.cognito.client.id,
       Username: email,
       Password: password,
+      UserAttributes: [{ Name: 'custom:internalId', Value: internalId }],
       SecretHash: this.getSecretHash(email),
     });
 
@@ -59,6 +62,30 @@ export class AuthGateway {
 
     return {
       externalId,
+    };
+  }
+
+  async refreshToken({
+    refreshToken,
+  }: AuthGateway.RefreshTokenParams): Promise<AuthGateway.RefreshTokenResult> {
+    const command = new GetTokensFromRefreshTokenCommand({
+      ClientId: this.appConfig.auth.cognito.client.id,
+      ClientSecret: this.appConfig.auth.cognito.client.secret,
+      RefreshToken: refreshToken,
+    });
+
+    const { AuthenticationResult } = await cognitoClient.send(command);
+
+    if (
+      !AuthenticationResult?.AccessToken ||
+      !AuthenticationResult?.RefreshToken
+    ) {
+      throw new Error('Cannot refresh token');
+    }
+
+    return {
+      accessToken: AuthenticationResult.AccessToken,
+      refreshToken: AuthenticationResult.RefreshToken,
     };
   }
 
@@ -75,6 +102,7 @@ export namespace AuthGateway {
   export type SignUpParams = {
     email: string;
     password: string;
+    internalId: string;
   };
 
   export type SignUpResult = {
@@ -87,6 +115,15 @@ export namespace AuthGateway {
   };
 
   export type SignInResult = {
+    accessToken: string;
+    refreshToken: string;
+  };
+
+  export type RefreshTokenParams = {
+    refreshToken: string;
+  };
+
+  export type RefreshTokenResult = {
     accessToken: string;
     refreshToken: string;
   };

@@ -1,5 +1,3 @@
-import KSUID from 'ksuid';
-
 // Decorators
 import { Injectable } from '@kernel/decorators/Injectable';
 
@@ -7,14 +5,16 @@ import { Injectable } from '@kernel/decorators/Injectable';
 import { Controller } from '@application/contracts/Controller';
 
 @Injectable()
-export class CreateMealController extends Controller<CreateMealController.Response> {
-  protected override async handle(): Promise<
+export class CreateMealController extends Controller<'private', CreateMealController.Response> {
+  protected override async handle({
+    accountId,
+  }: Controller.Request<'private'>): Promise<
     Controller.Response<CreateMealController.Response>
   > {
     return {
       statusCode: 201,
       body: {
-        mealId: KSUID.randomSync().string,
+        accountId,
       },
     };
   }
@@ -22,6 +22,6 @@ export class CreateMealController extends Controller<CreateMealController.Respon
 
 export namespace CreateMealController {
   export type Response = {
-    mealId: string;
+    accountId: string ;
   };
 }
