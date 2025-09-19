@@ -5,21 +5,6 @@ signUp:
         method: POST
         path: /auth/sign-up
 
-preSignUpTrigger:
-  handler: src/main/functions/auth/preSignUpTrigger.handler
-  events:
-    - cognitoUserPool:
-        pool: ${self:custom.cognito.PoolName}
-        trigger: PreSignUp
-        existing: true
-        forceDeploy: true
-
-# The trigger is configured manually to support event V2
-# Go to UserPool.yml to see the configuration
-# Do not change this function name without change in UserPool.yml
-preTokenGenerationTrigger:
-  handler: src/main/functions/auth/preTokenGenerationTrigger.handler
-
 signIn:
   handler: src/main/functions/auth/signIn.handler
   events:
@@ -47,3 +32,27 @@ confirmForgotPassword:
     - httpApi:
         method: POST
         path: /auth/forgot-password/confirm
+
+# The trigger is configured manually to support event V2
+# Go to UserPool.yml to see the configuration
+# Do not change this function name without change in UserPool.yml
+preTokenGenerationTrigger:
+  handler: src/main/functions/auth/cognito/preTokenGenerationTrigger.handler
+
+preSignUpTrigger:
+  handler: src/main/functions/auth/cognito/preSignUpTrigger.handler
+  events:
+    - cognitoUserPool:
+        pool: ${self:custom.cognito.PoolName}
+        trigger: PreSignUp
+        existing: true
+        forceDeploy: true
+
+customMessageTrigger:
+  handler: src/main/functions/auth/cognito/customMessageTrigger.handler
+  events:
+    - cognitoUserPool:
+        pool: ${self:custom.cognito.PoolName}
+        trigger: CustomMessage
+        existing: true
+        forceDeploy: true
